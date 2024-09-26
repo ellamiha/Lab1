@@ -1,6 +1,6 @@
-f
-f
-f
+pop
+3
+7
 1
 None
 0
