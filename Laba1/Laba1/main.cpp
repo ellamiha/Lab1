@@ -226,7 +226,7 @@ int main() {
             break;
 
         case SAVE_DATA: {
-            ofstream fout("data.txt");
+            ofstream fout("data.txt");//в этой строке создаётся объект fin который открывает файл data для чтения
             if (fout.is_open()) {
                 SaveData(fout, p, cs);
                 fout.close();
