@@ -139,18 +139,27 @@ void EditCompressorStationWorkshops(CompressorStation& cs) {
 
 //СОХРАНИТЬ/ЗАГРУЗИТЬ
 void SavePipe(ofstream& fout, const Pipe& p) {
-    fout << p.name << endl;
-    fout << p.length << endl;
-    fout << p.diameter << endl;
-    fout << p.isUnderRepair << endl;
+    string Marker = "pipe";
+    if (p.name == "None") fout << Marker << endl;
+    else
+    {
+        fout << p.name << endl;
+        fout << p.length << endl;
+        fout << p.diameter << endl;
+        fout << p.isUnderRepair << endl;
+    }
 }
 
 void SaveCS(ofstream& fout, const CompressorStation& cs) {
-    
-    fout << cs.name << endl;
-    fout << cs.totalWorkshops << endl;
-    fout << cs.operatingWorkshops << endl;
-    fout << cs.efficiency << endl;
+    string Marker = "CS";
+    if (cs.name == "None") fout << Marker << endl;
+    else
+    {
+        fout << cs.name << endl;
+        fout << cs.totalWorkshops << endl;
+        fout << cs.operatingWorkshops << endl;
+        fout << cs.efficiency << endl;
+    }
 }
 
 bool LoadPipe(ifstream& fin, Pipe& p) {
@@ -234,7 +243,7 @@ int main() {
             break;
 
         case SAVE_DATA: {
-            ofstream fout("data.txt");//в этой строке создаётся объект fin который открывает файл data для чтения
+            ofstream fout("data.txt");//в этой строке создаётся объект  который открывает файл data для чтения
             if (fout.is_open()) {
                 SavePipe(fout, p);
                 SaveCS(fout, cs);
