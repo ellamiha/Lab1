@@ -3,11 +3,11 @@
 #include <string>
 using namespace std;
 
-// ДЛЯ ОЧИСТКИ INPUT BUFFER 
+
 void ClearCinBuffer() {
     cout << "Invalid input\n";
-    cin.clear(); //если cin получает invalid input, дальше не получится ввода новых значений. clear убирает эту ошибку
-    cin.ignore(10000, '\n');// игнорировать до 10000 значений до \n; тк clear может оставить введенное \n 
+    cin.clear();
+    cin.ignore(10000, '\n');
 }
 
 // перечисление(enum) MenuOption; содержит варианты меню, для простого понимания какой вариант выбран в switch-case
@@ -23,6 +23,7 @@ enum MenuOption {
     LOAD_DATA = 7
 };
 
+
 struct Pipe {
     string name = "None";
     int length = 0;
@@ -32,7 +33,7 @@ struct Pipe {
 
 struct CompressorStation {
     string name = "None";
-    int totalWorkshops = 0;
+    int totalWorkshops  = 0;
     int operatingWorkshops = 0;
     int efficiency = 0;
 };
@@ -48,11 +49,12 @@ void PrintMenu() {
         << "0. Exit\n"
         << "Select an option: ";
 }
-//ТРУБА
-Pipe InputPipe() { //функция возвращает struct Pipe, p позволяет работать с отдельными значениям из Pipe
-    Pipe p;// объявление объекта структуры Pipe
+
+//Pipe
+Pipe InputPipe() {
+    Pipe p;
     cout << "Enter pipe name: ";
-    cin >> ws; //убирает все пробельные символы перед чтением строки
+    cin >> ws;
     getline(cin, p.name);
 
     cout << "Enter pipe length: ";
@@ -88,22 +90,22 @@ void TogglePipeRepairState(Pipe& p) {
     p.isUnderRepair = !p.isUnderRepair;
     cout << "Pipe repair state successfully changed\n\n";
 }
-//КС
+//CS
 CompressorStation InputCompressorStation() {
     CompressorStation cs;
 
     cout << "Enter compressor station name: ";
- 
-    getline(cin>> ws, cs.name);
+
+    getline(cin >> ws, cs.name);
 
     cout << "Enter total number of workshops: ";
-    while (!(cin >> cs.totalWorkshops) || cs.totalWorkshops <= 0) {
+    while (!(cin >> cs.totalWorkshops ) || cs.totalWorkshops  <= 0) {
         ClearCinBuffer();
         cout << "Enter total number of workshops: ";
     }
 
     cout << "Enter number of operating workshops: ";
-    while (!(cin >> cs.operatingWorkshops) || cs.operatingWorkshops < 0 || cs.operatingWorkshops > cs.totalWorkshops) {
+    while (!(cin >> cs.operatingWorkshops) || cs.operatingWorkshops < 0 || cs.operatingWorkshops > cs.totalWorkshops ) {
         ClearCinBuffer();
         cout << "Enter number of operating workshops: ";
     }
@@ -119,7 +121,7 @@ CompressorStation InputCompressorStation() {
 
 void PrintCompressorStationInfo(const CompressorStation& cs) {
     cout << "Compressor station name: " << cs.name << endl;
-    cout << "Total number of workshops: " << cs.totalWorkshops << endl;
+    cout << "Total number of workshops: " << cs.totalWorkshops  << endl;
     cout << "Operating workshops: " << cs.operatingWorkshops << endl;
     cout << "Efficiency: " << cs.efficiency << "%" << endl;
     cout << "\n";
@@ -128,7 +130,7 @@ void PrintCompressorStationInfo(const CompressorStation& cs) {
 void EditCompressorStationWorkshops(CompressorStation& cs) {
     int workshopChange;
     cout << "Enter change in operating workshops (positive or negative number): ";
-    while (!(cin >> workshopChange) || (cs.operatingWorkshops + workshopChange) > cs.totalWorkshops
+    while (!(cin >> workshopChange) || (cs.operatingWorkshops + workshopChange) > cs.totalWorkshops 
         || (cs.operatingWorkshops + workshopChange) < 0 || workshopChange == 0) {
         ClearCinBuffer();
         cout << "Enter valid change: ";
@@ -137,9 +139,9 @@ void EditCompressorStationWorkshops(CompressorStation& cs) {
     cout << "Number of operating workshops successfully updated\n\n";
 }
 
-//СОХРАНИТЬ/ЗАГРУЗИТЬ
+//save load
 void SavePipe(ofstream& fout, const Pipe& p) {
-    string Marker = "pipe";
+    string Marker = "no pipe";
     if (p.name == "None") fout << Marker << endl;
     else
     {
@@ -151,73 +153,52 @@ void SavePipe(ofstream& fout, const Pipe& p) {
 }
 
 void SaveCS(ofstream& fout, const CompressorStation& cs) {
-    string Marker = "CS";
+    string Marker = "no CS";
     if (cs.name == "None") fout << Marker << endl;
     else
     {
         fout << cs.name << endl;
-        fout << cs.totalWorkshops << endl;
+        fout << cs.totalWorkshops  << endl;
         fout << cs.operatingWorkshops << endl;
         fout << cs.efficiency << endl;
     }
 }
 
-//bool LoadPipe(ifstream& fin, Pipe& p) {
-//    
-//    
-//    if (!(getline(fin>>ws, p.name))) return false;
-//    if (!(fin >> p.length)) return false;
-//    if (!(fin >> p.diameter)) return false;
-//    if (!(fin >> p.isUnderRepair)) return false;
-//    fin.ignore(10000, '\n'); // очистить поток от ненужных символов после чтения, чтобы избежать ошибок при последующем вводе
-//
-//    return fin.good();
-//}
-//
-//bool LoadCS(ifstream& fin, CompressorStation& cs) {
-//    if (!(getline(fin >> ws, cs.name))) return false;
-//    if (!(fin >> cs.totalWorkshops)) return false;
-//    if (!(fin >> cs.operatingWorkshops)) return false;
-//    if (!(fin >> cs.efficiency)) return false;
-//    fin.ignore(10000, '\n'); // очистить поток от ненужных символов после чтения, чтобы избежать ошибок при последующем вводе
-//
-//    return fin.good();
-//}
-
-Pipe LoadPipe(ifstream& fin, Pipe& p) {
+bool LoadPipe(ifstream& fin, Pipe& p) {
+    p = { "None", 0, 0, 0 };
     string Marker;
     getline(fin >> ws, Marker);
-    if (Marker == "pipe") return p = { "None", 0, 0, 0 };
-    else {
+    if (Marker != "no pipe") 
+    {
         p.name = Marker;
         fin >> p.length;
         fin >> p.diameter;
         fin >> p.isUnderRepair;
-        return p;
-
     }
-
+    return fin.good();
 }
 
-CompressorStation LoadCS(ifstream& fin, CompressorStation& cs) {
+bool LoadCS(ifstream& fin, CompressorStation& cs) {
+    cs = { "None", 0, 0, 0 };
     string Marker;
     getline(fin >> ws, Marker);
-    if (Marker == "CS") return cs = { "None", 0, 0, 0 };
-    else {
+    if (Marker != "no CS") 
+    {
         cs.name = Marker;
-        fin >> cs.totalWorkshops;
+        fin >> cs.totalWorkshops ;
         fin >> cs.operatingWorkshops;
         fin >> cs.efficiency;
-        return cs;
-
     }
+    return fin.good();
 }
 
 
 
 int main() {
-    Pipe p ;
+    Pipe p;
     CompressorStation cs;
+
+    
 
     while (true) {
         PrintMenu();
@@ -232,10 +213,10 @@ int main() {
         //позволяет далее в программе использовать перечисление (enum),
         //а не просто числа, что делает код более понятным
         cout << "\n";
-        
+
 
         switch (selection) {
-        case INPUT_PIPE: //как раз таки введеный int уже стал enum
+        case INPUT_PIPE:
             p = InputPipe();
             break;
 
@@ -277,7 +258,7 @@ int main() {
             break;
 
         case SAVE_DATA: {
-            ofstream fout("data.txt");//в этой строке создаётся объект  который открывает файл data для чтения
+            ofstream fout("data.txt");
             if (fout.is_open()) {
                 SavePipe(fout, p);
                 SaveCS(fout, cs);
@@ -285,19 +266,18 @@ int main() {
                 cout << "Data successfully saved\n\n";
             }
             else {
-                 
+
                 cout << "Error opening file for writing\n\n";
             }
             break;
         }
 
         case LOAD_DATA: {
-            ifstream fin("data.txt");      
+            ifstream fin("data.txt");
             if (fin.is_open()) {
-                p = LoadPipe(fin, p);
-                cs = LoadCS(fin, cs);
+                if (LoadPipe(fin, p) && LoadCS(fin, cs))
+                    cout << "Data successfully loaded\n\n";
                 fin.close();
-                cout << "Data successfully loaded\n\n";
             }
             else {
                 cout << "Error opening file for reading\n\n";
@@ -315,4 +295,3 @@ int main() {
     }
     return 0;
 }
-
