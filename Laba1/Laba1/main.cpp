@@ -162,24 +162,58 @@ void SaveCS(ofstream& fout, const CompressorStation& cs) {
     }
 }
 
-bool LoadPipe(ifstream& fin, Pipe& p) {
-    if (!(getline(fin>>ws, p.name))) return false;
-    if (!(fin >> p.length)) return false;
-    if (!(fin >> p.diameter)) return false;
-    if (!(fin >> p.isUnderRepair)) return false;
-    fin.ignore(10000, '\n'); // очистить поток от ненужных символов после чтения, чтобы избежать ошибок при последующем вводе
+//bool LoadPipe(ifstream& fin, Pipe& p) {
+//    
+//    
+//    if (!(getline(fin>>ws, p.name))) return false;
+//    if (!(fin >> p.length)) return false;
+//    if (!(fin >> p.diameter)) return false;
+//    if (!(fin >> p.isUnderRepair)) return false;
+//    fin.ignore(10000, '\n'); // очистить поток от ненужных символов после чтения, чтобы избежать ошибок при последующем вводе
+//
+//    return fin.good();
+//}
+//
+//bool LoadCS(ifstream& fin, CompressorStation& cs) {
+//    if (!(getline(fin >> ws, cs.name))) return false;
+//    if (!(fin >> cs.totalWorkshops)) return false;
+//    if (!(fin >> cs.operatingWorkshops)) return false;
+//    if (!(fin >> cs.efficiency)) return false;
+//    fin.ignore(10000, '\n'); // очистить поток от ненужных символов после чтения, чтобы избежать ошибок при последующем вводе
+//
+//    return fin.good();
+//}
 
-    return fin.good();
+Pipe LoadPipe(ifstream& fin, Pipe& p) {
+    string Marker;
+    getline(fin >> ws, Marker);
+    if (Marker == "pipe") return p = { "None", 0, 0, 0 };
+    else {
+        p.name = Marker;
+        fin >> p.length;
+        fin >> p.diameter;
+        fin >> p.isUnderRepair;
+        return p;
+
+    }
+
 }
 
-bool LoadCS(ifstream& fin, CompressorStation& cs) {
-    if (!(getline(fin >> ws, cs.name))) return false;
-    if (!(fin >> cs.totalWorkshops)) return false;
-    if (!(fin >> cs.operatingWorkshops)) return false;
-    if (!(fin >> cs.efficiency)) return false;
-    fin.ignore(10000, '\n'); // очистить поток от ненужных символов после чтения, чтобы избежать ошибок при последующем вводе
-    return fin.good();
+CompressorStation LoadCS(ifstream& fin, CompressorStation& cs) {
+    string Marker;
+    getline(fin >> ws, Marker);
+    if (Marker == "CS") return cs = { "None", 0, 0, 0 };
+    else {
+        cs.name = Marker;
+        fin >> cs.totalWorkshops;
+        fin >> cs.operatingWorkshops;
+        fin >> cs.efficiency;
+        return cs;
+
+    }
 }
+
+
 
 int main() {
     Pipe p ;
@@ -251,21 +285,19 @@ int main() {
                 cout << "Data successfully saved\n\n";
             }
             else {
+                 
                 cout << "Error opening file for writing\n\n";
             }
             break;
         }
 
         case LOAD_DATA: {
-            ifstream fin("data.txt");
+            ifstream fin("data.txt");      
             if (fin.is_open()) {
-                if (LoadPipe(fin, p) || LoadCS(fin,cs)) {
-                    fin.close();
-                    cout << "Data successfully loaded\n\n";
-                }
-                else {
-                    cout << "Error loading data from file\n\n";
-                }
+                p = LoadPipe(fin, p);
+                cs = LoadCS(fin, cs);
+                fin.close();
+                cout << "Data successfully loaded\n\n";
             }
             else {
                 cout << "Error opening file for reading\n\n";
