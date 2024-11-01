@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <PIPEclass.h>
 using namespace std;
 
 
@@ -24,19 +25,19 @@ enum MenuOption {
 };
 
 
-struct Pipe {
-    string name = "None";
-    int length = 0;
-    int diameter = 0;
-    bool isUnderRepair = false;
-};
-
-struct CompressorStation {
-    string name = "None";
-    int totalWorkshops  = 0;
-    int operatingWorkshops = 0;
-    int efficiency = 0;
-};
+//struct Pipe {
+//    string name = "None";
+//    int length = 0;
+//    int diameter = 0;
+//    bool isUnderRepair = false;
+//};
+//
+//struct CompressorStation {
+//    string name = "None";
+//    int totalWorkshops  = 0;
+//    int operatingWorkshops = 0;
+//    int efficiency = 0;
+//};
 
 void PrintMenu() {
     cout << "1. Input pipe data\n"
@@ -53,7 +54,7 @@ void PrintMenu() {
 //Pipe
 Pipe InputPipe() {
     Pipe p;
-    cout << "Enter pipe name: ";
+    cout << "Enter pipe name: ";ю.
     cin >> ws;
     getline(cin, p.name);
 

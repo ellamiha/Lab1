@@ -127,7 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CS.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PIPE.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CSclass.h" />
+    <ClInclude Include="PIPEclass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
