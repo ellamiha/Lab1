@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="CSclass.h" />
     <ClInclude Include="PIPEclass.h" />
+    <ClInclude Include="SaveLoad.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

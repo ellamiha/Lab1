@@ -1,37 +1,103 @@
-#pragma once
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <istream>
-#include <unordered_map>
+#include "CSclass.h"
+#include "Functions.h"
+using namespace std;
 
-class CompressorStation
+int CompressorStation::maxId = 0;
+
+//CompressorStation::CompressorStation()
+//{
+//    id = 0;
+//    Name = "None";
+//    AmountOfWorkshops = 0;
+//    WorkshopsInWork = 0;
+//    EfficiencyLevel = 0;
+//}
+
+ifstream& operator >> (ifstream& fin, CompressorStation& s)
 {
-private:
-	static int maxId;
-	int id = 0;
-	std::string name;
-	int totalWorkshops = 0;
-	int operatingWorkshops = 0;
-	int efficiency = 0;
+    fin >> s.id;
+    s.maxId = s.id;
+    fin >> ws;
+    getline(fin, s.name);
+    fin >> s.totalWorkshops;
+    fin >> s.operatingWorkshops;
+    fin >> s.efficiency;
 
-public:
-	//inline 
-	int GetId() const { return id; }
-	std::string GetName() const { return name; }
-	int GetWorkhops() const { return totalWorkshops; }
-	int GetWorkingWorkhops() const { return operatingWorkshops; }
-	int GetPercent() const {
-		return (totalWorkshops > 0) ? (totalWorkshops - operatingWorkshops) * 100 / totalWorkshops : 0;
-	}
+    return fin;
+}
 
-	void EditWorkingWorkshops(const char sign);
+ofstream& operator << (ofstream& fout, const CompressorStation& s)
+{
+    if (s.name != "None")
+    {
+        fout << s.id << endl
+            << s.name << endl
+            << s.totalWorkshops << endl
+            << s.operatingWorkshops << endl
+            << s.efficiency << endl;
+    }
+    return fout;
+}
+
+istream& operator >> (istream& in, CompressorStation& s)
+{
+    s.id = ++s.maxId;
+    cout << "Enter compressor station name: ";
+    INPUT_LINE(in, s.name);
+
+    cout << "Enter amount of compressor station workshops: ";
+    s.totalWorkshops = GetCorrectNumber(1, 90);
+
+    cout << "Enter amount of working compressor station workshops: ";
+    s.operatingWorkshops = GetCorrectNumber(0, s.totalWorkshops);
+
+    cout << "Enter effeciency level of compressor station: ";
+    s.efficiency = GetCorrectNumber(0, 100);
+
+    return in;
+}
+
+ostream& operator << (ostream& out, const CompressorStation& s)
+{
+    out << "ID: " << s.id << endl
+        << "Compressor station name: " << s.name << endl
+        << "Amount of compressor station workshops: " << s.totalWorkshops << endl
+        << "Amount of working compressor station workshops: " << s.operatingWorkshops << endl
+        << "Effeciency level of compressor station: " << s.efficiency << "%" << endl
+        << "\n";
+    return out;
+}
 
 
-	friend std::ifstream& operator >> (std::ifstream& fin, CompressorStation& s);
-	friend std::ofstream& operator << (std::ofstream& fout, const CompressorStation& s);
+void CompressorStation::EditWorkingWorkshops(const char sign)
+{
+    if (sign == '+' && operatingWorkshops + 1 <= totalWorkshops)
+        operatingWorkshops += 1;
+    else if (sign == '-' && operatingWorkshops - 1 >= 0)
+        operatingWorkshops -= 1;
+}
 
-	friend std::istream& operator >> (std::istream& in, CompressorStation& s);
-	friend std::ostream& operator << (std::ostream& out, const CompressorStation& s);
-
-};
+//int CompressorStation::GetId()
+//{
+//    return id;
+//}
+//
+//string CompressorStation::GetName()
+//{
+//    return name;
+//}
+//
+//int CompressorStation::GetWorkhops()
+//{
+//    return totalWorkshops;
+//}
+//
+//int CompressorStation::GetWorkingWorkhops()
+//{
+//    return operatingWorkshops;
+//}
+//
+//int CompressorStation::GetPercent()
+//{
+//    return (totalWorkshops - operatingWorkshops) * 100 / (totalWorkshops);
+//}
